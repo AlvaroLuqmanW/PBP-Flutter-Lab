@@ -1,4 +1,5 @@
-import 'package:counter_7/form.dart';
+import 'package:counter_7/page/form.dart';
+import 'package:counter_7/page/to_do_page.dart';
 import 'package:counter_7/main.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +11,19 @@ class MyDataPage extends StatefulWidget {
 }
 
 class _MyDataPageState extends State<MyDataPage> {
+    List budgetList = ['A', 'B', 'C'];
+    List<Widget> textWidgetList = [];
+    
     @override
     Widget build(BuildContext context) {
+        for (int i = 0; i < budgetList.length; i++) {
+        textWidgetList.add(
+            Container(
+            child: Text(budgetList[i]),
+            ),
+        );
+        }
+
         return Scaffold(
             appBar: AppBar(
                 title: Text('Data Budget'),
@@ -56,9 +68,7 @@ class _MyDataPageState extends State<MyDataPage> {
             body: Center(
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                        Text('Hello World!'),
-                    ],
+                    children: textWidgetList,
                 ),
             ),
         );

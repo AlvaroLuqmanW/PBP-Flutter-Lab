@@ -1,6 +1,8 @@
 import 'package:counter_7/main.dart';
-import 'package:counter_7/data.dart';
+import 'package:counter_7/page/data.dart';
+import 'package:counter_7/page/to_do_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MyFormPage extends StatefulWidget {
     const MyFormPage({super.key});
@@ -12,10 +14,9 @@ class MyFormPage extends StatefulWidget {
 class _MyFormPageState extends State<MyFormPage> {
     final _formKey = GlobalKey<FormState>();
     String _judul = "";
-    String _nominal = 0;
-    String _tipeBudget = "";
-
-    var items = ['Pemasukan', 'Pengeluaran'];
+    String _nominal = "";
+    String _tipeBudget = "Pilih Jenis";
+    List<String> budgets = ['Pilih Jenis','Pemasukan', 'Pengeluaran'];
 
     @override
     Widget build(BuildContext context) {
@@ -57,6 +58,16 @@ class _MyFormPageState extends State<MyFormPage> {
                         );
                     },
                     ),
+                    ListTile(
+                    title: const Text('My Watch List'),
+                    onTap: () {
+                        // Route menu ke halaman to do
+                        Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => const ToDoPage()),
+                        );
+                    },
+                ),
                 ],
                 ),
             ),
@@ -73,9 +84,6 @@ class _MyFormPageState extends State<MyFormPage> {
                                 child: TextFormField(
                                     decoration: InputDecoration(
                                         labelText: "Judul",
-                                        // Menambahkan icon agar lebih intuitif
-                                        icon: const Icon(Icons.people),
-                                        // Menambahkan circular border agar lebih rapi
                                         border: OutlineInputBorder(
                                             borderRadius: BorderRadius.circular(5.0),
                                         ),
@@ -105,6 +113,8 @@ class _MyFormPageState extends State<MyFormPage> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: TextFormField(
                                     keyboardType: TextInputType.number,
+                                    inputFormatters: <TextInputFormatter>[
+                                    FilteringTextInputFormatter.digitsOnly],
                                     decoration: InputDecoration(
                                         labelText: "Nominal",
                                         // Menambahkan circular border agar lebih rapi
@@ -113,19 +123,19 @@ class _MyFormPageState extends State<MyFormPage> {
                                         ),
                                     ),
                                     // Menambahkan behavior saat nama diketik 
-                                    onChanged: (int? value) {
+                                    onChanged: (String? value) {
                                         setState(() {
                                             _nominal = value!;
                                         });
                                     },
                                     // Menambahkan behavior saat data disimpan
-                                    onSaved: (int? value) {
+                                    onSaved: (String? value) {
                                         setState(() {
                                             _nominal = value!;
                                         });
                                     },
                                     // Validator sebagai validasi form
-                                    validator: (int? value) {
+                                    validator: (String? value) {
                                         if (value == null) {
                                             return 'Nominal harus angka dan tidak boleh kosong!';
                                         }
@@ -139,26 +149,20 @@ class _MyFormPageState extends State<MyFormPage> {
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                         DropdownButton(
-                                        // Initial Value
                                         value: _tipeBudget,
-                                        
-                                        // Down Arrow Icon
                                         icon: const Icon(Icons.keyboard_arrow_down),   
-                                        
-                                        // Array list of items
-                                        items: items.map((String items) {
+                                        items: budgets.map((String items) {
                                             return DropdownMenuItem(
                                             value: items,
                                             child: Text(items),
                                             );
                                         }).toList(),
-                                        // After selecting the desired option,it will
-                                        // change button value to selected value
                                         onChanged: (String? newValue) {
                                             setState(() {
-                                            dropdownvalue = newValue!;
+                                            _tipeBudget = newValue!;
                                             });
                                         },
+                                        
                                         ),
                                     ]
                                 )
@@ -173,11 +177,10 @@ class _MyFormPageState extends State<MyFormPage> {
                                 ),
                                 onPressed: () {
                                     if (_formKey.currentState!.validate()) {
-                                        showDialog(
-                                        context: context,
-                                        builder: (context) {
-                                        },
-                                    );
+                                        Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const MyDataPage()),
+                                        );         
                                     }
                                 },
                                 ),
